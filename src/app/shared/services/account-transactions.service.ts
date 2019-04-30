@@ -36,7 +36,7 @@ export class AccountTransactionsService {
       throw new Error('Insufficient balance!');
     }
     if (amount < 100) {
-      throw new Error(amount + ' is not a permissible withdrawal. Lowest permissible withdrawal is 100 SEK ');
+      throw new Error(amount + 'is not a permissible withdrawal. Lowest permissible withdrawal is 100 SEK');
 
     }
 

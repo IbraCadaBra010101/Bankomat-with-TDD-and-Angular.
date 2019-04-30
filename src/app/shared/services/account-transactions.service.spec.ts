@@ -16,7 +16,7 @@ describe('AccountTransactionsService', () => {
   afterEach(() => {
     service = null;
   });
-
+  //
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
@@ -29,7 +29,7 @@ describe('AccountTransactionsService', () => {
     expect(service.customer.balance).toBeTruthy(-1);
     expect(service.customer.balance).toEqual(5000);
   });
-
+  //
   // ett konto ska innehålla kundens namn
   it('should contain the customers name', () => {
     expect(service.customer.customerName).toContain('Oskar Olsson');
@@ -43,22 +43,20 @@ describe('AccountTransactionsService', () => {
 
   });
 
-  // Saldo
+  // // Saldo
   // det ska finnas en funktion getBalance som returnerar saldot på ett konto
   it(' getbalance should exist upon init', () => {
     // make it fail
     // success?
-
     expect(service.getBalance).toBeTruthy();
   });
   it('should always return the correct balance', () => {
     expect(service.getBalance(service.customer)).toEqual(5000);
 
   });
-
-  // Insättning
-  // det ska finnas en funktion deposit som hanterar insättningar
-
+  //
+  // // Insättning
+  // // det ska finnas en funktion deposit som hanterar insättningar
   it('deposit should exist when called', () => {
     // init spy on
     spyOn(service, 'deposit');
@@ -79,19 +77,20 @@ describe('AccountTransactionsService', () => {
   it('should not allow amount less than 100 kr to be added', () => {
     // this must fail.
     // succeded in depositing negative amount therefore refactor code to throw error if amount is less than 100 kr!
-    service.deposit(service.customer, 99);
+
     // throws error i.e success
-    expect(service.customer.balance).toThrowError();
+    expect(() => {
+      service.deposit(service.customer, 99);
+    }).toThrowError();
   });
   // om en insättning inte är giltigt ska funktionen kasta ett Error
   // en insättning får inte vara mer än 10.000 kr
 
   it('should not allow amount more than 10000 to be deposited', () => {
     // must throw error as 10001 is beyond limit
-    expect(service.deposit(service.customer, 10001)).toThrowError();
-    // success
-    expect(service.deposit(service.customer, 10000));
-
+    expect(() => {
+      service.deposit(service.customer, 10001);
+    }).toThrowError();
   });
 
 
@@ -111,16 +110,19 @@ describe('AccountTransactionsService', () => {
     // if success money is withdrawn
     expect(service.customer.balance).toEqual(4000);
   });
+
   // Kunden ska inte kunna överskrida sitt saldo vid uttag, Kasta Error
   it('should not allow withdrawal higher than that of current balance', () => {
-    expect(service.withdraw(service.customer, 5001)).toThrowError();
+    expect(() => {
+      service.withdraw(service.customer, 5001);
+    }).toThrowError();
   });
-  //// Minsta tillåtna withdrawal är 100 kr. Kasta error
+  // Minsta tillåtna withdrawal är 100 kr. Kasta error
   it('does not allow a withdrawal less than a 100 kr', () => {
-    const c = 99;
-    service.withdraw(service.customer, c);
-    expect(service.withdraw(service.customer, c)).toThrowError();
-    expect(service.withdraw(service.customer, c)).toThrowError();
+
+    expect(() => {
+      service.withdraw(service.customer, 99);
+    }).toThrowError();
   });
 
   // det ska finnas en funktion transfer som hanterar överföringar
@@ -134,13 +136,19 @@ describe('AccountTransactionsService', () => {
 
   it('should not allow transfers higher than existing balance', () => {
     //Crediting account does not have sufficient balance
-    service.transfer(service.customer, service.customer2, 5001);
-    expect(service.transfer).toThrowError();
+
+    expect(() => {
+      service.transfer(service.customer, service.customer2, 5001);
+    }).toThrowError();
 
   });
   it('should not allow a tranfer of an amount less than a 100 kr', () => {
-    service.transfer(service.customer, service.customer2, 99);
+
+
+    // service.transfer();
     //Error: 99 is not permissible as it is a negative number
-    expect(service.transfer).toThrowError();
+    expect(() => {
+      service.transfer(service.customer, service.customer2, 88);
+    }).toThrowError();
   });
 });
