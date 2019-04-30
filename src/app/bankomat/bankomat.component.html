@@ -1,0 +1,33 @@
+<form>
+  <div>
+
+    <label><h3>Deposit</h3>
+      <input name="amount" type="text" ngModel [(ngModel)]="amount" [ngModelOptions]="{standalone: true}" min=100
+             required>
+    </label>
+    <button [disabled]="!amount" type="submit" (click)="depositMoney(amount)">Deposit</button>
+
+    <label><h3>Withdraw</h3>
+      <input name="amount" type="text" ngModel [(ngModel)]="withdrawal" [ngModelOptions]="{standalone: true}" min=100
+             required>
+    </label>
+    <button [disabled]="!withdrawal" type="submit" (click)="withdraw(withdrawal)">Withdraw</button>
+
+    <label><h3>Transfer</h3>
+      <input name="transfer" type="text" ngModel [(ngModel)]="transferAmount"
+             [ngModelOptions]="{standalone: true}"
+             required>
+    </label>
+    <button [disabled]="!transferAmount"
+            (click)="transfer(service.customer,service.customer2, transferAmount)">Transfer
+    </button>
+
+    <h3>{{account.customerName}}</h3>
+    <p>Customer name: {{account.customerName}}</p>
+    <p class='accountBalance'>Customer balance: {{account.balance}} SEK</p>
+    <h3>{{account2.customerName}}</h3>
+    <p>Customer name: {{account2.customerName}}</p>
+    <p>Customer balance: {{account2.balance}} SEK</p>
+  </div>
+</form>
+
