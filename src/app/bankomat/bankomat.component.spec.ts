@@ -2,13 +2,13 @@ import {TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {BankomatComponent} from './bankomat.component';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {AccountTransactionsService} from '../shared/services/account-transactions.service';
+// import {AccountTransactionsService} from '../shared/services/account-transactions.service';
 import {DebugElement} from '@angular/core';
-import {MockTransactionService} from "../shared/services/mock-transaction.service";
+import {MockTransactionService} from '../shared/services/mock-transaction.service';
 
 describe('BankomatComponent', () => {
   let component: BankomatComponent;
-  let service: AccountTransactionsService;
+  let service: MockTransactionService;
   let fixture: ComponentFixture<BankomatComponent>;
 
 
@@ -19,52 +19,50 @@ describe('BankomatComponent', () => {
     }).compileComponents();
   }));
   beforeEach(() => {
-    service = new AccountTransactionsService();
+    service = new MockTransactionService();
     component = new BankomatComponent(service);
     fixture = TestBed.createComponent(BankomatComponent);
-    // create component and test fixture
     component = fixture.componentInstance;
-
   });
   afterEach(() => {
     service = null;
     component = null;
   });
-  // MOCKING
-  // // det ska finnas en komponent med namnet Bank
-  // it('should create the app', () => {
-  //   const app = fixture.debugElement.componentInstance;
-  //   expect(app).toBeTruthy();
-  // });
-  // // hämta saldot
-  // it('it should call getBalance()', () => {
-  //   // jasmine.createSpy('withdraw');
-  //   spyOn(service, 'getBalance');
-  //   service.getBalance();
-  //   expect(service.getBalance).toHaveBeenCalled();
-  // });
-  //
-  //
-  // // göra insättning
-  // it('should call deposit', () => {
-  //   spyOn(service, 'deposit');
-  //   service.deposit();
-  //   expect(service.deposit).toHaveBeenCalled();
-  // });
-  //
-  // // göra uttag
-  // it('should call withdraw ', () => {
-  //   spyOn(service, 'withdraw');
-  //   service.withdraw();
-  //   expect(service.withdraw).toHaveBeenCalled();
-  // });
-  //
-  // // överföring
-  // it('should call transfer with fake amount', () => {
-  //   spyOn(service, 'transfer');
-  //   service.transfer();
-  //   expect(service.transfer).toHaveBeenCalled();
-  // });
+  //MOCKING
+  // det ska finnas en komponent med namnet Bank
+  it('should create the app', () => {
+    const app = fixture.debugElement.componentInstance;
+    expect(app).toBeTruthy();
+  });
+  // hämta saldot
+  it('it should call getBalance()', () => {
+    // jasmine.createSpy('withdraw');
+    spyOn(service, 'getBalance');
+    service.getBalance();
+    expect(service.getBalance).toHaveBeenCalled();
+  });
+
+
+  // göra insättning
+  it('should call deposit', () => {
+    spyOn(service, 'deposit');
+    service.deposit();
+    expect(service.deposit).toHaveBeenCalled();
+  });
+
+  // göra uttag
+  it('should call withdraw ', () => {
+    spyOn(service, 'withdraw');
+    service.withdraw();
+    expect(service.withdraw).toHaveBeenCalled();
+  });
+
+  // överföring
+  it('should call transfer with fake amount', () => {
+    spyOn(service, 'transfer');
+    service.transfer();
+    expect(service.transfer).toHaveBeenCalled();
+  });
   // TESTAR KOMPONENTENS KRAV SPEC
   // komponenten ska kunna visa ett konto
   it('should show a customers name on DOM as part of customers account', () => {
