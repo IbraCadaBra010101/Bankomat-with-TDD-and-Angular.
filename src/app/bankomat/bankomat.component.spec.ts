@@ -98,7 +98,7 @@ describe('BankomatComponent', () => {
     expect(textInputFieldOnDOM[0]).toBeTruthy();
     // transfer
     expect(textInputFieldOnDOM[1]).toBeTruthy();
-    //withdraw
+    // withdraw
     expect(textInputFieldOnDOM[2]).toBeTruthy();
   });
 

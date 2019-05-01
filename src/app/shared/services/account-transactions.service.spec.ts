@@ -25,9 +25,8 @@ describe('AccountTransactionsService', () => {
 
   // ett konto ska ha ett saldo som är noll eller högre
   it('account should return a balance of 0 or higher', () => {
-    service.withdraw(service.customer, 5001);
-    expect(service.customer.balance).toBeTruthy(-1);
-    expect(service.customer.balance).toEqual(5000);
+    service.withdraw(service.customer, 5000);
+    expect(service.customer.balance).toEqual(0);
   });
   //
   // ett konto ska innehålla kundens namn
@@ -40,29 +39,25 @@ describe('AccountTransactionsService', () => {
     // interface dictates balance prop is of type number:
     // Refactor value assigned to balance to number inside code.
     expect(service.customer.balance).toEqual(jasmine.any(Number));
-
   });
 
   // // Saldo
   // det ska finnas en funktion getBalance som returnerar saldot på ett konto
   it(' getbalance should exist upon init', () => {
-    // make it fail
-    // success?
     expect(service.getBalance).toBeTruthy();
   });
   it('should always return the correct balance', () => {
     expect(service.getBalance(service.customer)).toEqual(5000);
 
   });
-  //
-  // // Insättning
-  // // det ska finnas en funktion deposit som hanterar insättningar
+
+  // Insättning
+  // det ska finnas en funktion deposit som hanterar insättningar
   it('deposit should exist when called', () => {
     // init spy on
     spyOn(service, 'deposit');
     service.deposit(service.customer, 1000);
     expect(service.deposit).toHaveBeenCalled();
-
   });
 
   // en insättning måste ha ett giltigt konto
@@ -99,7 +94,6 @@ describe('AccountTransactionsService', () => {
     spyOn(service, 'withdraw');
     // run withdraw function from service
     service.withdraw(service.customer, 1000);
-
     expect(service.withdraw).toHaveBeenCalled();
 
   });
@@ -119,7 +113,6 @@ describe('AccountTransactionsService', () => {
   });
   // Minsta tillåtna withdrawal är 100 kr. Kasta error
   it('does not allow a withdrawal less than a 100 kr', () => {
-
     expect(() => {
       service.withdraw(service.customer, 99);
     }).toThrowError();
@@ -130,23 +123,18 @@ describe('AccountTransactionsService', () => {
     spyOn(service, 'transfer');
     service.transfer(service.customer, service.customer2, 1000);
     expect(service.transfer).toHaveBeenCalled();
-
   });
   // Överföringsbeloppet får inte vara högre än saldot
 
   it('should not allow transfers higher than existing balance', () => {
     //Crediting account does not have sufficient balance
-
     expect(() => {
       service.transfer(service.customer, service.customer2, 5001);
     }).toThrowError();
 
   });
   it('should not allow a tranfer of an amount less than a 100 kr', () => {
-
-
     // service.transfer();
-    //Error: 99 is not permissible as it is a negative number
     expect(() => {
       service.transfer(service.customer, service.customer2, 88);
     }).toThrowError();
