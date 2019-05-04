@@ -8,7 +8,7 @@ import {Account} from '../interfaces/account';
 export class AccountTransactionsService {
 
   customer: Account = {customerName: 'Oskar Olsson', balance: 5000};
-  customer2: Account = {customerName: 'Skatteverkets Bank Giro', balance: null};
+  customer2: Account = {customerName: 'Skatteverkets Bank Giro', balance: 300};
 
   constructor() {
     console.log(this.customer.balance);
@@ -64,7 +64,7 @@ export class AccountTransactionsService {
 
   transfer(from: Account, to: Account, amount: number): void {
     if (from.balance == null || to.balance === null || amount === null) {
-      throw new Error('Cannot be Null');
+      throw new Error('Type null is forbidden please use a number');
     }
 
 
