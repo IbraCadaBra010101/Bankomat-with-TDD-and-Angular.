@@ -2,17 +2,17 @@ import {TestBed} from '@angular/core/testing';
 import {AccountTransactionsService} from './account-transactions.service';
 import {BankomatComponent} from '../../bankomat/bankomat.component';
 
+
 describe('AccountTransactionsService', () => {
   let component: BankomatComponent;
   let service: AccountTransactionsService;
-  let spy: any;
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.get(AccountTransactionsService);
     service = new AccountTransactionsService();
     component = new BankomatComponent(service);
-
   });
+
   afterEach(() => {
     service = null;
   });
@@ -43,22 +43,84 @@ describe('AccountTransactionsService', () => {
 
   // // Saldo
   // det ska finnas en funktion getBalance som returnerar saldot på ett konto
-  it(' getbalance should exist upon init', () => {
-    expect(service.getBalance).toBeTruthy();
+
+  // 3 Du har testat att getBalance finns och returnerar rätt värde för ett utvalt testkonto.
+  // Men vad ska getBalance gör om det är ett felaktigt konto? Vad händer om man råkar skicka
+  // `null` eller något annat till funktionen?
+  // _Lägg till testfall som testar att getBalance gör rätt saker för felaktiga värden på parametern._
+
+  it(' getbalance should exist', () => {
+    expect(service.getBalance).toBeDefined();
   });
   it('should always return the correct balance', () => {
-    expect(service.getBalance(service.customer)).toEqual(5000);
+    const testingNameWithWrongValue = {customerName: 1234, balance: 5000};
+    expect(() => {
+      service.getBalance(testingNameWithWrongValue);
+    }).toThrow();
 
+    const testingBalanceWithWrongValue = {customerName: 'name', balance: 'ddsdf'};
+    expect(() => {
+        service.getBalance(testingBalanceWithWrongValue);
+      }
+    ).toThrow();
   });
 
+  // 4 "deposit should exist when called" - börja med att testa "deposit should exist".
+  // Sedan kan man testa att rätt saker händer när den anropas.
+  //   Samma sak gäller för withdraw och transfer.
+
   // Insättning
+
+
   // det ska finnas en funktion deposit som hanterar insättningar
-  it('deposit should exist when called', () => {
+  it('deposit should exist', () => {
     // init spy on
     spyOn(service, 'deposit');
     service.deposit(service.customer, 1000);
-    expect(service.deposit).toHaveBeenCalled();
+    expect(service.deposit).toBeDefined();
   });
+
+  // 5 Du har testat att deposit finns. Men du behöver testa att deposit kan göra rätt.
+  // Vad ska hända med kontot om alla parametrar och ok? Det är det förväntade utfallet, som man behöver
+  // testa med expect. Sedan behöver du testa vad som händer om parametrarna inte är ok.
+
+  it('there should be a deposit function which handles deposits', () => {
+
+    // correct parameters for amount
+    // Vad ska hända med kontot om alla parametrar och ok? Det är det förväntade utfallet, som man behöver
+    service.deposit(service.customer, 230);
+    expect(service.customer.balance).toEqual(5230);
+
+    // incorrect parameters for amount
+    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
+
+    expect(() => {
+      service.deposit(service.customer, null);
+    }).toThrow();
+    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
+
+    expect(() => {
+      service.deposit(service.customer, 'hffhgh');
+    }).toThrow();
+    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
+
+    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
+
+    // incorrect parameters for account balance
+    const account = {customerName: 'john', balance: 'ghffdd'};
+    expect(() => {
+      service.deposit(account, 1233);
+    }).toThrow();
+    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
+
+    // incorrect parameters for account name
+    const account2 = {customerName: 1234, balance: 5000};
+    expect(() => {
+      service.deposit(account2, 1000);
+    }).toThrow();
+
+  });
+
 
   // en insättning måste ha ett giltigt konto
   it('deposit should be called with a valid account!', () => {
@@ -89,12 +151,12 @@ describe('AccountTransactionsService', () => {
   });
 
 
-  it('withdraw should exist when called ', () => {
+  it('withdraw should exist', () => {
     // initatie spy
     spyOn(service, 'withdraw');
     // run withdraw function from service
     service.withdraw(service.customer, 1000);
-    expect(service.withdraw).toHaveBeenCalled();
+    expect(service.withdraw).toBeDefined();
 
   });
   // testar ifall rätt mängd tas ut från kontot
@@ -119,10 +181,52 @@ describe('AccountTransactionsService', () => {
   });
 
   // det ska finnas en funktion transfer som hanterar överföringar
-  it('transfer should exist when called ', () => {
+  it('transfer should exist', () => {
     spyOn(service, 'transfer');
     service.transfer(service.customer, service.customer2, 1000);
-    expect(service.transfer).toHaveBeenCalled();
+    expect(service.transfer).toBeDefined();
+  });
+
+  // 7 Det finns inget testfall som kontrollerar att transfer gör rätt, om parametrarna är ok.
+//   Parametrarna kan vara fel på flera sätt än du har testat.
+
+  it('there should be function called transfer which handles transfers', () => {
+    // when correct
+
+    // incorrect parameter name in sending account
+    const account = {customerName: 123, balance: 4560};
+    expect(() => {
+      service.transfer(account, service.customer, 130);
+    }).toThrow();
+
+    // incorrect parameter name in receving account
+    expect(() => {
+      service.transfer(service.customer, account, 120);
+    }).toThrow();
+
+    // incorrect parameter balance in sending account
+    const account2 = {customerName: 'Jim', balance: null};
+    expect(() => {
+      service.transfer(account2, service.customer, 67);
+    }).toThrow();
+
+    // incorrect parameter balance in receiving account
+    const accountReceiving = {customerName: 'Jim', balance: 'abcd'};
+    const accountSending = {customerName: 'Jim', balance: 5000};
+
+    const actual = () => service.transfer(accountSending, accountReceiving, 100);
+    expect(actual).toThrow();
+
+    // incorrect parameters amount
+    const wrong = null;
+    expect(() => {
+      service.transfer(accountSending, service.customer, wrong);
+    }).toThrow();
+    const wrongAgain = 'dfcg';
+    expect(() => {
+      service.transfer(accountSending, service.customer, wrongAgain);
+    }).toThrow();
+
   });
   // Överföringsbeloppet får inte vara högre än saldot
 
@@ -140,3 +244,58 @@ describe('AccountTransactionsService', () => {
     }).toThrowError();
   });
 });
+
+
+//
+//
+// Kommentarer på uppgiften:
+//
+//   *Servicen*
+// 1 Man kan använda `describe` för att gruppera liknande tester.
+// Det blir enklare att läsa då. Så här:
+//   ```describe('MyService', () => {
+//    describe('getBalance', () => {
+//       it('should be created', () => ...
+//    });
+//
+//    describe('deposit', () => {
+//       it...  // osv
+//    });
+// });
+//
+// 2 Poängen med kraven på ett _konto_ är att man behöver veta vad ett konto är
+// för att testa getBalance, deposit, withdraw och transfer. Man behöver inte testa Account specifikt.
+//
+// 3 Du har testat att getBalance finns och returnerar rätt värde för ett utvalt testkonto.
+// Men vad ska getBalance gör om det är ett felaktigt konto? Vad händer om man råkar skicka
+// `null` eller något annat till funktionen?
+// _Lägg till testfall som testar att getBalance gör rätt saker för felaktiga värden på parametern._
+//
+// 4 "deposit should exist when called" - börja med att testa "deposit should exist".
+// Sedan kan man testa att rätt saker händer när den anropas.
+//   Samma sak gäller för withdraw och transfer.
+//
+// 5 Du har testat att deposit finns. Men du behöver testa att deposit kan göra rätt.
+// Vad ska hända med kontot om alla parametrar och ok? Det är det förväntade utfallet, som man behöver
+// testa med expect. Sedan behöver du testa vad som händer om parametrarna inte är ok.
+//
+// 6 Tips. I stället för att lägga ett konto i servicen kan man skapa det direkt i testfallen, när du behöver det:
+//   ```let testAccount = { customerName: 'Nalle Puh', balance: 12345 };```
+//
+// 7 Det finns inget testfall som kontrollerar att transfer gör rätt, om parametrarna är ok.
+//   Parametrarna kan vara fel på flera sätt än du har testat.
+//
+// *Komponenten*
+// 8 Testet "it should call getBalance" _testar servicen, inte komponenten!_ Servicen testas
+// i sin egen testfil, det ska man inte göra igen. Samma sak med "it should call deposit/withdraw/transfer".
+// Inget av de testfallen ingår inte i kravspecen för komponenten.
+// Man testar inte sina mocks, det blir dubbelarbete. Ta bort testfallen.
+//
+// 9 Testet "should show a customers name on DOM as part of customers account" är ok.
+// Men det är riskabelt att testet är beroende av att saldot ska visas i den första p-taggen.
+// Är det verkligen inte ok att flytta runt elementen på sidan? För att göra sin app robust bör man använda CSS-klasser på element
+// som man behöver plocka ut ur DOM. Då spelar inte ordningen någon roll längre.
+//
+//
+//   Testfallen för komponenten är ok, de behöver du inte ändra på. Men jag vill att du kompletterar
+//   testfallen för servicen enligt punkterna 3, 4, 5 och 7.
