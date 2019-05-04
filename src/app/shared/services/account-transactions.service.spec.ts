@@ -91,30 +91,23 @@ describe('AccountTransactionsService', () => {
     service.deposit(service.customer, 230);
     expect(service.customer.balance).toEqual(5230);
 
+    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
     // incorrect parameters for amount
-    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
-
     expect(() => {
       service.deposit(service.customer, null);
     }).toThrow();
-    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
 
     expect(() => {
-      service.deposit(service.customer, null);
+      service.deposit(service.customer, NaN);
     }).toThrow();
-    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
 
-    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
-
-    // incorrect parameters for account balance
+    // incorrect parameters for account balance null
     const account = {customerName: 'john', balance: null};
     expect(() => {
       service.deposit(account, 1233);
     }).toThrow();
-    //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
-
-    // incorrect parameters for account name
-    const account2 = {customerName: null, balance: 5000};
+    // incorrect parameters for account balance Nan
+    const account2 = {customerName: 'Tom', balance: NaN};
     expect(() => {
       service.deposit(account2, 1000);
     }).toThrow();
@@ -232,7 +225,6 @@ describe('AccountTransactionsService', () => {
   // Överföringsbeloppet får inte vara högre än saldot
 
   it('should not allow transfers higher than existing balance', () => {
-    //Crediting account does not have sufficient balance
     expect(() => {
       service.transfer(service.customer, service.customer2, 5001);
     }).toThrowError();
@@ -245,58 +237,3 @@ describe('AccountTransactionsService', () => {
     }).toThrowError();
   });
 });
-
-
-//
-//
-// Kommentarer på uppgiften:
-//
-//   *Servicen*
-// 1 Man kan använda `describe` för att gruppera liknande tester.
-// Det blir enklare att läsa då. Så här:
-//   ```describe('MyService', () => {
-//    describe('getBalance', () => {
-//       it('should be created', () => ...
-//    });
-//
-//    describe('deposit', () => {
-//       it...  // osv
-//    });
-// });
-//
-// 2 Poängen med kraven på ett _konto_ är att man behöver veta vad ett konto är
-// för att testa getBalance, deposit, withdraw och transfer. Man behöver inte testa Account specifikt.
-//
-// 3 Du har testat att getBalance finns och returnerar rätt värde för ett utvalt testkonto.
-// Men vad ska getBalance gör om det är ett felaktigt konto? Vad händer om man råkar skicka
-// `null` eller något annat till funktionen?
-// _Lägg till testfall som testar att getBalance gör rätt saker för felaktiga värden på parametern._
-//
-// 4 "deposit should exist when called" - börja med att testa "deposit should exist".
-// Sedan kan man testa att rätt saker händer när den anropas.
-//   Samma sak gäller för withdraw och transfer.
-//
-// 5 Du har testat att deposit finns. Men du behöver testa att deposit kan göra rätt.
-// Vad ska hända med kontot om alla parametrar och ok? Det är det förväntade utfallet, som man behöver
-// testa med expect. Sedan behöver du testa vad som händer om parametrarna inte är ok.
-//
-// 6 Tips. I stället för att lägga ett konto i servicen kan man skapa det direkt i testfallen, när du behöver det:
-//   ```let testAccount = { customerName: 'Nalle Puh', balance: 12345 };```
-//
-// 7 Det finns inget testfall som kontrollerar att transfer gör rätt, om parametrarna är ok.
-//   Parametrarna kan vara fel på flera sätt än du har testat.
-//
-// *Komponenten*
-// 8 Testet "it should call getBalance" _testar servicen, inte komponenten!_ Servicen testas
-// i sin egen testfil, det ska man inte göra igen. Samma sak med "it should call deposit/withdraw/transfer".
-// Inget av de testfallen ingår inte i kravspecen för komponenten.
-// Man testar inte sina mocks, det blir dubbelarbete. Ta bort testfallen.
-//
-// 9 Testet "should show a customers name on DOM as part of customers account" är ok.
-// Men det är riskabelt att testet är beroende av att saldot ska visas i den första p-taggen.
-// Är det verkligen inte ok att flytta runt elementen på sidan? För att göra sin app robust bör man använda CSS-klasser på element
-// som man behöver plocka ut ur DOM. Då spelar inte ordningen någon roll längre.
-//
-//
-//   Testfallen för komponenten är ok, de behöver du inte ändra på. Men jag vill att du kompletterar
-//   testfallen för servicen enligt punkterna 3, 4, 5 och 7.

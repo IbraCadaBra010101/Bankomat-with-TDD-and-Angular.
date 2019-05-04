@@ -24,18 +24,17 @@ export class AccountTransactionsService {
   }
 
   deposit(account: Account, amount: number): void {
-    if (isNaN(amount) || amount === null) {
+    if (account.balance == null || amount === null) {
+      throw new Error('Type null is forbidden please use a number');
+    }
+    if (isNaN(amount)) {
       throw new Error(
         'Deposited amount must be a number'
       );
     }
-    if (isNaN(account.balance) || account.balance === null) {
-      throw new Error('Invalid account balance');
+    if (isNaN(account.balance)) {
+      throw new Error('Account balance muste be a number');
     }
-    if (typeof account.customerName !== 'string') {
-      throw new Error('Invalid account name');
-    }
-
     if (amount < 100) {
       throw new Error(
         'Lowest amount permissible is 100 SEK'
