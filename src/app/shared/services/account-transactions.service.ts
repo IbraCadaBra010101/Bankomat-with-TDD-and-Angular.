@@ -8,7 +8,7 @@ import {Account} from '../interfaces/account';
 export class AccountTransactionsService {
 
   customer: Account = {customerName: 'Oskar Olsson', balance: 5000};
-  customer2: Account = {customerName: 'Skatteverkets Bank Giro', balance: 0};
+  customer2: Account = {customerName: 'Skatteverkets Bank Giro', balance: null};
 
   constructor() {
     console.log(this.customer.balance);
@@ -63,28 +63,36 @@ export class AccountTransactionsService {
   }
 
   transfer(from: Account, to: Account, amount: number): void {
-    if (from.balance >= amount && amount > 99) {
-      to.balance += amount;
-      from.balance -= amount;
+    if (from.balance == null || to.balance === null || amount === null) {
+      throw new Error('Cannot be Null');
     }
+
+
     if (amount < 100) {
       throw new Error(amount + ' is not a permissible transferal amount');
     }
-    if (isNaN(amount) || amount == null) {
+    if (isNaN(amount)) {
       throw new Error('The transfer amount must be a number');
     }
-    if (from.balance == null || isNaN(from.balance) ) {
+    if (isNaN(from.balance)) {
       // from.balance == null || to.balance === null
       throw new Error('Incorrect balance.  Account balance must be a number.');
 
     }
-    if (isNaN(to.balance) || to.balance == null) {
+
+
+    if (isNaN(to.balance)) {
       throw new Error('Incorrect account balance. Account balance must be a number.');
 
     }
+
     if (from.balance < amount) {
       throw new Error('Insufficient balance in transmitting account');
 
+    }
+    if (from.balance >= amount && amount > 99) {
+      to.balance += amount;
+      from.balance -= amount;
     }
   }
 }

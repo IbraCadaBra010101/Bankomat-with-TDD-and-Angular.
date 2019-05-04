@@ -196,21 +196,23 @@ describe('AccountTransactionsService', () => {
     const account2 = {customerName: 'Jim', balance: null};
     const accountSending = {customerName: 'Jim', balance: 5000};
 
-   // incorrect parameter balance in sending account null
+    // incorrect parameter balance in sending account null
     expect(() => {
-      service.transfer(account2, service.customer, 67);
+      service.transfer(account2, service.customer, 200);
     }).toThrow();
-  //  incorrect parameter balance in sending account NaN
+    //  incorrect parameter balance in sending account NaN
     expect(() => {
-      service.transfer(account5, service.customer, 67);
+      service.transfer(account5, service.customer, 200);
     }).toThrow();
 
-   // incorrect parameter balance in receiving account null
-   //  const actual = () => service.transfer(accountSending, account2, 100);
-   //  expect(actual).toThrow();
-    // incorrect parameter balance in receiving account NaN
-    const actual2 = () => service.transfer(accountSending, account5, 100);
-    expect(actual2).toThrow();
+    //  incorrect parameter balance in receving account NaN
+    expect(() => {
+      service.transfer(accountSending, account5, 100);
+    }).toThrow();
+    //  incorrect parameter balance in receving account null
+    expect(() => {
+      service.transfer(service.customer, account2, 100);
+    }).toThrow();
 
 
     //incorrect parameters amount
