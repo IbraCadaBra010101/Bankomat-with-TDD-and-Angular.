@@ -53,12 +53,12 @@ describe('AccountTransactionsService', () => {
     expect(service.getBalance).toBeDefined();
   });
   it('should always return the correct balance', () => {
-    const testingNameWithWrongValue = {customerName: 1234, balance: 5000};
+    const testingNameWithWrongValue = {customerName: 'Jim', balance: null};
     expect(() => {
       service.getBalance(testingNameWithWrongValue);
     }).toThrow();
 
-    const testingBalanceWithWrongValue = {customerName: 'name', balance: 'ddsdf'};
+    const testingBalanceWithWrongValue = {customerName: 'name', balance: NaN};
     expect(() => {
         service.getBalance(testingBalanceWithWrongValue);
       }
@@ -100,21 +100,21 @@ describe('AccountTransactionsService', () => {
     //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
 
     expect(() => {
-      service.deposit(service.customer, 'hffhgh');
+      service.deposit(service.customer, null);
     }).toThrow();
     //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
 
     //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
 
     // incorrect parameters for account balance
-    const account = {customerName: 'john', balance: 'ghffdd'};
+    const account = {customerName: 'john', balance: null};
     expect(() => {
       service.deposit(account, 1233);
     }).toThrow();
     //  Sedan behöver du testa vad som händer om parametrarna inte är ok.
 
     // incorrect parameters for account name
-    const account2 = {customerName: 1234, balance: 5000};
+    const account2 = {customerName: null, balance: 5000};
     expect(() => {
       service.deposit(account2, 1000);
     }).toThrow();
@@ -191,42 +191,41 @@ describe('AccountTransactionsService', () => {
 //   Parametrarna kan vara fel på flera sätt än du har testat.
 
   it('there should be function called transfer which handles transfers', () => {
-    // when correct
 
-    // incorrect parameter name in sending account
-    const account = {customerName: 123, balance: 4560};
-    expect(() => {
-      service.transfer(account, service.customer, 130);
-    }).toThrow();
-
-    // incorrect parameter name in receving account
-    expect(() => {
-      service.transfer(service.customer, account, 120);
-    }).toThrow();
-
-    // incorrect parameter balance in sending account
+    const account5 = {customerName: 'Jim', balance: NaN};
     const account2 = {customerName: 'Jim', balance: null};
+    const accountSending = {customerName: 'Jim', balance: 5000};
+
+   // incorrect parameter balance in sending account null
     expect(() => {
       service.transfer(account2, service.customer, 67);
     }).toThrow();
+  //  incorrect parameter balance in sending account NaN
+    expect(() => {
+      service.transfer(account5, service.customer, 67);
+    }).toThrow();
 
-    // incorrect parameter balance in receiving account
-    const accountReceiving = {customerName: 'Jim', balance: 'abcd'};
-    const accountSending = {customerName: 'Jim', balance: 5000};
+   // incorrect parameter balance in receiving account null
+   //  const actual = () => service.transfer(accountSending, account2, 100);
+   //  expect(actual).toThrow();
+    // incorrect parameter balance in receiving account NaN
+    const actual2 = () => service.transfer(accountSending, account5, 100);
+    expect(actual2).toThrow();
 
-    const actual = () => service.transfer(accountSending, accountReceiving, 100);
-    expect(actual).toThrow();
 
-    // incorrect parameters amount
+    //incorrect parameters amount
     const wrong = null;
     expect(() => {
       service.transfer(accountSending, service.customer, wrong);
     }).toThrow();
-    const wrongAgain = 'dfcg';
+    const wrongAgain = NaN;
     expect(() => {
       service.transfer(accountSending, service.customer, wrongAgain);
     }).toThrow();
-
+    const veryWrong = 99;
+    expect(() => {
+      service.transfer(accountSending, service.customer, veryWrong);
+    }).toThrow();
   });
   // Överföringsbeloppet får inte vara högre än saldot
 

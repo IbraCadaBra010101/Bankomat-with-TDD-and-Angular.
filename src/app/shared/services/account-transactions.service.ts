@@ -15,13 +15,9 @@ export class AccountTransactionsService {
   }
 
   getBalance(account: Account): number {
-    if (isNaN(account.balance)) {
+    if (isNaN(account.balance) || account.balance === null) {
       throw new Error(
         'Account balance is of an invalid type. Should be a number!'
-      );
-    } else if (typeof account.customerName !== 'string') {
-      throw new Error(
-        'Account name is of an invalid type. Should be a string of letters!'
       );
     }
     return account.balance;
@@ -74,24 +70,16 @@ export class AccountTransactionsService {
     if (amount < 100) {
       throw new Error(amount + ' is not a permissible transferal amount');
     }
-    if (isNaN(amount) || amount === null) {
+    if (isNaN(amount) || amount == null) {
       throw new Error('The transfer amount must be a number');
+    }
+    if (from.balance == null || isNaN(from.balance) ) {
+      // from.balance == null || to.balance === null
+      throw new Error('Incorrect balance.  Account balance must be a number.');
 
     }
-    if (typeof from.customerName !== 'string') {
-      throw new Error('Incorrect account name in transmitting account.  Account name must be a string of letters.');
-
-    }
-    if (typeof to.customerName !== 'string') {
-      throw new Error('Incorrect account name in receiving account.  Account name must be a string of letters.');
-
-    }
-    if (isNaN(from.balance)) {
-      throw new Error('Incorrect balance in sending account.  Account balance must be a number.');
-
-    }
-    if (isNaN(to.balance)) {
-      throw new Error('Incorrect account balance in receiving account. Account balance must be a number.');
+    if (isNaN(to.balance) || to.balance == null) {
+      throw new Error('Incorrect account balance. Account balance must be a number.');
 
     }
     if (from.balance < amount) {
